@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 
 struct Process {
-    int id;
+    char id[20];
     int arrivalTime;
     int burstTime;
     int completionTime;
@@ -38,19 +39,51 @@ void calculate(struct Process processes[], int n) {
     }
 }
 
+void averageWaitingTime(struct Process processes[], int n) {
+    int sum = 0;
+    float result = 0;
+    for(int i=0; i<n; i++) {
+        sum = sum + processes[i].waitingTime;
+    }
+    result = (float) sum / n;
+    printf("\nAverage Waiting Time : %.2f", result); 
+}
+
+void averageCompletionTime(struct Process processes[], int n) {
+    int sum = 0;
+    float result = 0;
+    for(int i=0; i<n; i++) {
+        sum = sum + processes[i].completionTime;
+    }
+    result = (float) sum / n;
+    printf("\nAverage Completion Time : %.2f", result); 
+}
+
+void averageTurnaroundTime(struct Process processes[], int n) {
+    int sum = 0;
+    float result = 0;
+    for(int i=0; i<n; i++) {
+        sum = sum + processes[i].turnaroundTime;
+    }
+    result = (float) sum / n;
+    printf("\nAverage TurnAround Time : %.2f", result); 
+}
+
 int main() {
     int n;
     printf("Enter Number of Process : ");
     scanf("%d", &n);
+    fflush(stdin);
     struct Process processes[n];
     struct Process temp[n];
     for(int i=0; i<n; i++) {
         printf("\nEnter Process Id : ");
-        scanf("%d", &processes[i].id);
+        fgets(processes[i].id, sizeof(processes[i].id), stdin);
         printf("Enter Process Arrival Time : ");
         scanf("%d", &processes[i].arrivalTime);
         printf("Enter Burst Time : ");
         scanf("%d", &processes[i].burstTime);
+        fflush(stdin);
     }
     for (int i = 0; i < n; i++) {
         temp[i] = processes[i];
@@ -60,10 +93,13 @@ int main() {
     printf("\nProcess ID   Arrival Time   Burst Time   Completion Time   Waiting Time   Turnaround Time\n");
     for(int j=0; j<n; j++) {
         for(int i=0; i<n; i++) {
-            if(temp[j].id == processes[i].id) {
-                printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].id, processes[i].arrivalTime, processes[i].burstTime, processes[i].completionTime, processes[i].waitingTime, processes[i].turnaroundTime);
+            if((strcmp(temp[j].id, processes[i].id)) == 0) {
+                printf("%s\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].id, processes[i].arrivalTime, processes[i].burstTime, processes[i].completionTime, processes[i].waitingTime, processes[i].turnaroundTime);
             }
         }
     }
+    averageWaitingTime(processes, n);
+    averageCompletionTime(processes, n);
+    averageTurnaroundTime(processes, n);
     return 0;
 }
